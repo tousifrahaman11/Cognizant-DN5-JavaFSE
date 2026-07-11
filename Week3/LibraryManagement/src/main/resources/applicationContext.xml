@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        Exercise 1: Configure the Application Context.
+        Docx says: "Create an XML configuration file named
+        applicationContext.xml. Define beans for BookService
+        and BookRepository in the XML file."
+    -->
+
+    <!-- Bean definition for BookRepository -->
+    <bean id="bookRepository"
+          class="com.library.repository.BookRepository"/>
+
+    <!--
+        Exercise 2: Implementing Dependency Injection.
+        Docx says: "Update applicationContext.xml to wire
+        BookRepository into BookService."
+        This uses setter injection: Spring calls setBookRepository()
+        automatically with the bookRepository bean.
+    -->
+    <bean id="bookService"
+          class="com.library.service.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>
