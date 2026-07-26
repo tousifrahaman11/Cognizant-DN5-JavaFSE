@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Event Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: #f8f9fb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#events">Events</a>
+        <a href="#contact">Contact</a>
+        <a href="help.html" target="_blank">Help</a>
+    </nav>
+
+    <!-- Main -->
+    <main>
+        <section id="home">
+            <header id="mainHeader">
+                <h1>Local Community Event Portal</h1>
+                <p>Easy registration, service updates, and community news for residents.</p>
+            </header>
+
+            <div id="welcomeBanner">
+                <h2>Welcome back, neighbor!</h2>
+                <p class="highlight">You have <span class="emphasis">special access</span> to priority event registration.</p>
+            </div>
+
+            <section id="events">
+                <h2>Upcoming Community Events</h2>
+                <p class="highlight">Select an event below to see details and register.</p>
+                <div class="event-filters">
+                    <label for="categoryFilter">Filter by category:</label>
+                    <select id="categoryFilter" name="categoryFilter">
+                        <option value="">All categories</option>
+                        <option value="Music">Music</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Community">Community</option>
+                    </select>
+                    <label for="searchInput">Search by location or name:</label>
+                    <input type="text" id="searchInput" placeholder="Enter keyword...">
+                </div>
+
+                <table class="image-table" aria-describedby="gallery-caption">
+                    <caption id="gallery-caption">Gallery of recent community events and celebration highlights</caption>
+                    <tr>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=Festival" alt="Community festival" title="Summer Festival" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Family Festival</strong></p>
+                        </td>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=Market" alt="Farmers market" title="Farmers Market" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Farmers Market</strong></p>
+                        </td>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=Concert" alt="Community concert" title="Outdoor Concert" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Outdoor Concert</strong></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=Picnic" alt="Park picnic" title="Park Picnic" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Neighborhood Picnic</strong></p>
+                        </td>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=CleanUp" alt="Park cleanup" title="Community Cleanup" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Park Cleanup</strong></p>
+                        </td>
+                        <td>
+                            <img src="https://via.placeholder.com/220x150?text=Workshop" alt="Workshop" title="Wellness Workshop" class="event-image" ondblclick="toggleImageSize(this)">
+                            <p><strong>Wellness Workshop</strong></p>
+                        </td>
+                    </tr>
+                </table>
+                <div id="eventCards" class="grid"></div>
+            </section>
+
+            <section id="registration">
+                <h2>Event Registration</h2>
+                <form id="registrationForm" onsubmit="return submitRegistration(event)">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Jane Doe" required autofocus>
+
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="jane.doe@example.com" required>
+
+                    <label for="eventDate">Event Date</label>
+                    <input type="date" id="eventDate" name="eventDate" required>
+
+                    <label for="eventType">Event Type</label>
+                    <select id="eventType" name="eventType" onchange="updateFee(this.value)" required>
+                        <option value="">Choose an event</option>
+                        <option value="Festival">Family Festival</option>
+                        <option value="Market">Farmers Market</option>
+                        <option value="Concert">Outdoor Concert</option>
+                        <option value="Workshop">Wellness Workshop</option>
+                    </select>
+
+                    <p id="eventFee" class="status-message">Event fee will appear here after selection.</p>
+
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" placeholder="555-123-4567" onblur="validatePhone(this)">
+
+                    <label for="message">Message or Questions</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Tell us about any accommodations or questions." onkeyup="countCharacters(this)" required></textarea>
+                    <p id="charCount">Characters: 0</p>
+
+                    <button type="submit" onclick="showSubmitConfirmation(event)">Register Now</button>
+                    <button type="button" onclick="clearPreferences()">Clear Preferences</button>
+
+                    <p class="status-message" id="formConfirmation"></p>
+                    <output id="registrationOutput" name="registrationOutput"></output>
+                </form>
+            </section>
+
+            <section id="feedback">
+                <h2>Event Feedback</h2>
+                <p>Share feedback as you interact with the registration form.</p>
+                <p id="feedbackStatus" class="status-message">Feedback is ready for your input.</p>
+            </section>
+
+            <section id="videoInvite">
+                <h2>Event Invite Video</h2>
+                <video id="promoVideo" controls oncanplay="videoReady()">
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    Your browser does not support the video element.
+                </video>
+                <p id="videoMessage" class="status-message"></p>
+            </section>
+
+            <section id="geolocation">
+                <h2>Find Nearby Events</h2>
+                <button type="button" onclick="findNearbyEvents()">Find Nearby Events</button>
+                <p id="locationResult" class="status-message"></p>
+            </section>
+        </section>
+
+        <section id="contact">
+            <h2>Contact and Support</h2>
+            <p>If you need help, open the <a href="help.html" target="_blank">help document</a> or contact city services.</p>
+            <address>
+                City Council Office<br>
+                123 Main Street<br>
+                support@cityportal.local
+            </address>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Local City Council. Built for residents to discover events and services.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('beforeunload', function (event) {
+            const form = document.getElementById('registrationForm');
+            if (form && (form.name.value || form.email.value || form.message.value)) {
+                event.preventDefault();
+                event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+
+        function validatePhone(input) {
+            const phonePattern = /^\d{3}-\d{3}-\d{4}$/;
+            const feedback = document.getElementById('feedbackStatus');
+            if (!input.value) {
+                feedback.textContent = 'Phone number is optional, but recommended.';
+                feedback.classList.remove('warning');
+                return;
+            }
+            if (!phonePattern.test(input.value)) {
+                feedback.textContent = 'Please use the format 555-123-4567.';
+                feedback.classList.add('warning');
+                input.focus();
+            } else {
+                feedback.textContent = 'Phone number format looks good.';
+                feedback.classList.remove('warning');
+            }
+        }
+
+        function updateFee(value) {
+            const output = document.getElementById('eventFee');
+            const fees = {
+                Festival: '$10',
+                Market: 'Free',
+                Concert: '$15',
+                Workshop: '$8'
+            };
+            output.textContent = value ? `Selected event fee: ${fees[value] || 'Please check event details.'}` : 'Event fee will appear here after selection.';
+            if (value) {
+                localStorage.setItem('preferredEventType', value);
+                sessionStorage.setItem('currentEventType', value);
+            }
+        }
+
+        function showSubmitConfirmation(event) {
+            const confirmation = document.getElementById('formConfirmation');
+            confirmation.textContent = 'Please complete the form and submit. We will confirm once it is valid.';
+            confirmation.classList.remove('warning');
+        }
+
+        function submitRegistration(event) {
+            event.preventDefault();
+            const form = event.target;
+            const output = document.getElementById('registrationOutput');
+            const confirmation = document.getElementById('formConfirmation');
+            if (!form.checkValidity()) {
+                confirmation.textContent = 'Please fill in all required fields before submitting.';
+                confirmation.classList.add('warning');
+                return false;
+            }
+            const selectedEvent = form.eventType.value;
+            const name = form.name.value;
+            output.textContent = `Thank you, ${name}. You are registered for ${selectedEvent}.`;
+            confirmation.textContent = 'Registration submitted successfully!';
+            confirmation.classList.remove('warning');
+            console.log('Form submitted:', { name, email: form.email.value, eventDate: form.eventDate.value, eventType: selectedEvent });
+            return false;
+        }
+
+        function toggleImageSize(image) {
+            image.classList.toggle('enlarged');
+        }
+
+        function countCharacters(textarea) {
+            const count = textarea.value.length;
+            document.getElementById('charCount').textContent = `Characters: ${count}`;
+        }
+
+        function videoReady() {
+            document.getElementById('videoMessage').textContent = 'Video ready to play';
+            console.log('Video is ready and can play.');
+        }
+
+        function findNearbyEvents() {
+            const result = document.getElementById('locationResult');
+            if (!navigator.geolocation) {
+                result.textContent = 'Geolocation is not supported by your browser.';
+                return;
+            }
+            result.textContent = 'Getting your current location...';
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const { latitude, longitude } = position.coords;
+                    result.textContent = `Coordinates: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}.`;
+                },
+                function (error) {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            result.textContent = 'Location permission denied. Please allow access to find nearby events.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            result.textContent = 'Location information is unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            result.textContent = 'Location request timed out. Try again.';
+                            break;
+                        default:
+                            result.textContent = 'An unknown error occurred while looking up your location.';
+                            break;
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        function clearPreferences() {
+            localStorage.removeItem('preferredEventType');
+            sessionStorage.removeItem('currentEventType');
+            document.getElementById('eventType').value = '';
+            document.getElementById('eventFee').textContent = 'Event fee will appear here after selection.';
+            document.getElementById('formConfirmation').textContent = 'Preferences cleared.';
+            console.log('Preferences cleared from localStorage and sessionStorage.');
+        }
+
+        function restorePreferences() {
+            const saved = localStorage.getItem('preferredEventType');
+            if (saved) {
+                const select = document.getElementById('eventType');
+                select.value = saved;
+                updateFee(saved);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            restorePreferences();
+            document.getElementById('message').addEventListener('blur', function () {
+                document.getElementById('feedbackStatus').textContent = 'Thanks for your feedback message. Keep typing if you wish.';
+            });
+        });
+    </script>
+    <script src="main.js"></script>
+    <!--
+    Answers:
+    - HTML uses <!DOCTYPE html>, <html lang="en"> and <meta charset="UTF-8"> for HTML5 and UTF-8 compatibility.
+    - Navigation uses <nav> and anchor hrefs to section IDs like #events and #contact.
+    - The welcome banner is an id (#welcomeBanner) with inline style on a <span> and reusable .highlight class.
+    - The gallery uses a 2x3 <table> of <img> tags with alt/title attributes and a caption.
+    - The registration form includes text, email, date, select, textarea fields with placeholder, required, 
+      autofocus, and <output>.
+    - Event handling includes onblur phone validation, onchange fee display, onclick confirmation, ondblclick
+     image enlarge, and keyup character counting.
+    - Media uses a <video> with oncanplay and beforeunload warns on unsaved form data.
+    - Preferences use localStorage/sessionStorage and clear button to delete stored choices.
+    - Geolocation uses navigator.geolocation.getCurrentPosition with permission and timeout handling.
+    -->
+</body>
+</html>
